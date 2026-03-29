@@ -1,0 +1,263 @@
+{
+  "auth": {
+    "passwordHash": "4ce078fb046db6cc315721dd659a15e758e414e74767a4fad5559692ed6db2ae"
+  },
+  "profil": {
+    "nom": "Ludel S. G. TOPANOU",
+    "poste": "Développeur web full-stack & Data analyst",
+    "email": "topanoulucio@gmail.com",
+    "telephone": "(+229) 0161012344",
+    "photo": "/uploads/1774642456762_profile-pic.png",
+    "logo": "/uploads/1774640836593_Logo-_Mono-Cercle_---LUCIOSCODE.png",
+    "cv": "/uploads/1774573372141_CV_TOPANOU_Ludel.pdf",
+    "description": "Développeur back-end spécialisé en Django, Spring Boot, MongoDB et PostgreSQL. Expérimenté en API REST, optimisation des bases de données et CI/CD, avec un fort intérêt pour la performance et la sécurité des applications, je m’intéresse à l’Intelligence Artificielle.\n",
+    "disponible": true
+  },
+  "competences": [
+    {
+      "nom": "Python",
+      "valeur": 75
+    },
+    {
+      "nom": "HTML",
+      "valeur": 67
+    },
+    {
+      "nom": "CSS",
+      "valeur": 52
+    },
+    {
+      "nom": "Auto-apprentissage",
+      "valeur": 89
+    }
+  ],
+  "technologies": [
+    {
+      "id": 1,
+      "nom": "HTML5 & CSS3",
+      "logo": "/uploads/1774574099552_html_css.png"
+    },
+    {
+      "id": 2,
+      "nom": "JavaScript",
+      "logo": "/uploads/1774574633314_javascript-39393.png"
+    },
+    {
+      "id": 3,
+      "nom": "Bootstrap",
+      "logo": "/uploads/1774574639688_boostrap.png"
+    },
+    {
+      "id": 4,
+      "nom": "Python",
+      "logo": "/uploads/1774573983970_python.png"
+    },
+    {
+      "id": 5,
+      "nom": "Django",
+      "logo": "/uploads/1774574644536_django.png"
+    },
+    {
+      "id": 6,
+      "nom": "C",
+      "logo": "/uploads/1774574649935_c.png"
+    },
+    {
+      "id": 7,
+      "nom": "C++",
+      "logo": "/uploads/1774574654399_c_cTQKy5J.png"
+    },
+    {
+      "id": 8,
+      "nom": "Java",
+      "logo": "/uploads/1774574660422_java.png"
+    },
+    {
+      "id": 9,
+      "nom": "PHP",
+      "logo": "/uploads/1774574676220_php.png"
+    },
+    {
+      "id": 10,
+      "nom": "Spring MyBatis",
+      "logo": "/uploads/1774574696671_boot.png"
+    },
+    {
+      "id": 11,
+      "nom": "GitHub",
+      "logo": "/uploads/1774574702386_GitHub-Logo.png"
+    },
+    {
+      "id": 12,
+      "nom": "MySQL",
+      "logo": "/uploads/1774574733300_mysql.png"
+    },
+    {
+      "id": 13,
+      "nom": "PostgreSQL",
+      "logo": "/uploads/1774574739272_pg_sql.png"
+    },
+    {
+      "id": 14,
+      "nom": "Photoshop",
+      "logo": "/uploads/1774574753665_photoshop.png"
+    },
+    {
+      "id": 15,
+      "nom": "Illustrator",
+      "logo": "/uploads/1774574764779_illustrator.png"
+    },
+    {
+      "id": 16,
+      "nom": "XD",
+      "logo": "/uploads/1774574777274_xd.png"
+    },
+    {
+      "id": 17,
+      "nom": "Figma",
+      "logo": "/uploads/1774574797711_figma.png"
+    }
+  ],
+  "experiences": [
+    {
+      "id": 1,
+      "entreprise": "EKLA SOLUTION",
+      "type": "Stage professionnel",
+      "dateDebut": "2024-07-01",
+      "dateFin": "2024-08-20",
+      "description": "Mise en place d'une application de gestion de commerciaux"
+    },
+    {
+      "id": 2,
+      "entreprise": "LA POSTE DU BÉNIN (AGENCE DE GANHI)",
+      "type": "Stage professionnel",
+      "dateDebut": "2024-02-12",
+      "dateFin": "2024-05-10",
+      "description": "Gestion des bornes d'accès et analyse de données"
+    },
+    {
+      "id": 3,
+      "entreprise": "MINISTÈRE DE L'ÉCONOMIE ET DES FINANCES",
+      "type": "Bénévolat",
+      "dateDebut": "2023-11-01",
+      "dateFin": "2024-02-09",
+      "description": "Projet web de la Direction informatique de la Direction Générale Budget"
+    },
+    {
+      "id": 4,
+      "entreprise": "MINISTÈRE DE L'ÉCONOMIE ET DES FINANCES",
+      "type": "Stage académique",
+      "dateDebut": "2023-04-20",
+      "dateFin": "2023-06-10",
+      "description": "Projet de financement participatif (Crowdfunding)"
+    },
+    {
+      "id": 5,
+      "entreprise": "AKS PICTURES",
+      "type": "Stage académique",
+      "dateDebut": "2022-09-01",
+      "dateFin": "2022-10-02",
+      "description": "Développement de jeu avec le moteur Renpy"
+    },
+    {
+      "id": 6,
+      "entreprise": "COMEUP",
+      "type": "Freelance",
+      "dateDebut": "2021-11-01",
+      "dateFin": null,
+      "description": "Développement d'applications web, rédaction, correction et audit de scripts Python, analyse de données et présentation de rapports."
+    },
+    {
+      "id": 7,
+      "entreprise": "COMEUP",
+      "type": "Freelance",
+      "dateDebut": "2021-11-01",
+      "dateFin": null,
+      "description": "Rédaction de contenu web à partir du thème et de limites sur le vocabulaire à utiliser, le nombre de mots et les arguments à développer."
+    }
+  ],
+  "statistiques": [
+    {
+      "id": 1,
+      "libelle": "Scripts rédigés",
+      "valeur": 120,
+      "suffixe": ""
+    },
+    {
+      "id": 2,
+      "libelle": "Projets web",
+      "valeur": 15,
+      "suffixe": ""
+    },
+    {
+      "id": 3,
+      "libelle": "Clients",
+      "valeur": 30,
+      "suffixe": ""
+    },
+    {
+      "id": 4,
+      "libelle": "Taux de satisfaction",
+      "valeur": 98,
+      "suffixe": "%"
+    },
+    {
+      "libelle": "Test AI",
+      "valeur": 0,
+      "suffixe": ""
+    },
+    {
+      "libelle": "Nouveau",
+      "valeur": 0,
+      "suffixe": ""
+    }
+  ],
+  "projets": [
+    {
+      "id": 1,
+      "titre": "STARTUP BOOST",
+      "categorie": "Développement web",
+      "date": "2023-12-09",
+      "image": "/uploads/1774642867423_SUB.png",
+      "lien": "#"
+    },
+    {
+      "id": 2,
+      "titre": "CRM-POSTE",
+      "categorie": "Développement web",
+      "date": "2024-03-01",
+      "image": "/uploads/1774642873943_CRM-POSTE.png",
+      "lien": "#"
+    },
+    {
+      "id": 3,
+      "titre": "POSTE-IMMO",
+      "categorie": "Développement web",
+      "date": "2024-03-01",
+      "image": "/uploads/1774642879684_POSTE-Immo.png",
+      "lien": "#"
+    },
+    {
+      "id": 4,
+      "titre": "CNTD SUPPORT",
+      "categorie": "Développement web",
+      "date": "2024-04-01",
+      "image": "/uploads/1774642885809_CNTD_Support.png",
+      "lien": "#"
+    },
+    {
+      "id": 5,
+      "titre": "POSTE TOURISME",
+      "categorie": "Développement web",
+      "date": "2024-05-17",
+      "image": "/uploads/1774642893025_POSTE-TOURISME.png",
+      "lien": "#"
+    }
+  ],
+  "contact": {
+    "adresse": "GODOMEY - TANKPè",
+    "telephone": "(+229) 0161012344",
+    "email": "topanoulucio@gmail.com",
+    "formulaireActif": true
+  }
+}

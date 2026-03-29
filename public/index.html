@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portfolio de Ludel TOPANOU - Développeur Web & IA">
+    <meta name="keywords"
+        content="Ludel TOPANOU, Développeur Web, IA, Portfolio, Ludel, Lucio, Lucio TOPANOU, TOPANOU, TOPANOU Ludel, Informatique, Génie Logiciel, Sofware, Software engineer, Ingénieur Logiciel, Ingénieur en Informatique">
+    <meta name="author" content="Ludel TOPANOU">
+    <meta name="theme-color" content="#030308">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Ludel TOPANOU — Portfolio 3D Premium</title>
+    <style>
+        /* ===== DESIGN SYSTEM & TOKENS ===== */
+        :root {
+            --bg: #030308;
+            --surface: rgba(10, 10, 25, 0.4);
+            --surface-hover: rgba(12, 12, 35, 0.6);
+            --accent: #00AAFF;
+            --accent-glow: rgba(0, 170, 255, 0.4);
+            --violet: #7B2FFF;
+            --violet-glow: rgba(123, 47, 255, 0.4);
+            --text: #F8F8FF;
+            --text-dim: rgba(248, 248, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --radius: 16px;
+            --glass-blur: 16px;
+            --font-main: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-title: "Space Grotesk", "Segoe UI Bold", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(123, 47, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 170, 255, 0.05) 0%, transparent 50%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        #cursor-ball {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease;
+        }
+
+        #cursor-outline {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease-out, opacity 0.3s;
+            mix-blend-mode: screen;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .glass {
+            background: var(--surface);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            padding: 8px 32px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav.scrolled {
+            top: 12px;
+            padding: 6px 24px;
+            border-color: var(--accent);
+        }
+
+        .nav-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #global-stars-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 24px;
+            background: linear-gradient(to bottom, #fff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: flowIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: flowIn 1.2s 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-logo-wrap {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 32px;
+            border-radius: 50%;
+            padding: 6px;
+            background: conic-gradient(from 0deg, var(--accent), var(--violet), var(--accent));
+            animation: rotateGradient 4s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .hero-logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: contain;
+            border: 4px solid var(--bg);
+            background: #fff;
+            animation: rotateSelf 10s linear infinite;
+        }
+
+        @keyframes rotateSelf {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes flowIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotateGradient {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== TECH STACK V2 ===== */
+        #technologies {
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 600px;
+            margin: 40px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #technologies.fullscreen {
+            height: 100vh;
+            margin: 0;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            padding: 0;
+            border-radius: 0;
+            background: var(--bg);
+        }
+
+        #dice-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .dice-ui {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .btn-dice {
+            padding: 12px 24px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-dice:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .dice-instructions {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .dice-tooltip {
+            position: fixed;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: 0.2s;
+            z-index: 3000;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* ===== PROJETS & BENTO ===== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(160px, auto);
+            gap: 20px;
+        }
+
+        .bento-item {
+            padding: 32px;
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bento-item:hover {
+            transform: translateY(-5px);
+            background-color: var(--surface-hover);
+        }
+
+        .grid-header {
+            grid-column: span 4;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .grid-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .project-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .project-img-wrap {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: 1.2s;
+        }
+
+        .project-info {
+            padding: 24px;
+            background: linear-gradient(to top, rgba(3, 3, 8, 1), rgba(3, 3, 8, 0.8));
+            border-top: 1px solid var(--border);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+        }
+
+        .project-card:hover .project-img {
+            transform: scale(1.08);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: left;
+            border-radius: 24px;
+            border: 1px solid var(--accent);
+            background: linear-gradient(135deg, #0a0a1a, #030308);
+            box-shadow: 0 0 50px rgba(0, 170, 255, 0.2);
+            animation: modalIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .modal-body {
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn-close-modal {
+            float: right;
+            cursor: pointer;
+            color: var(--text-dim);
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+
+        .btn-close-modal:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 31px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--violet), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            padding-left: 60px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 24px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid #030308;
+            box-shadow: 0 0 10px var(--accent-glow);
+            z-index: 2;
+        }
+
+        .timeline-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: 0.3s;
+        }
+
+        .timeline-card:hover {
+            border-color: var(--accent);
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .timeline-company {
+            font-family: var(--font-title);
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .timeline-type {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timeline-desc {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        #contact .glass {
+            overflow: hidden;
+        }
+
+        .cv-preview-container {
+            width: 100%;
+            height: auto;
+            min-height: 400px;
+            margin: 30px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.15);
+            transition: 0.4s;
+        }
+
+        .cv-preview-container:hover {
+            box-shadow: 0 0 35px var(--accent-glow);
+            transform: translateY(-3px);
+        }
+
+        .cv-header {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+
+        .cv-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cv-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .cv-dot.red {
+            background: #ff5f56;
+        }
+
+        .cv-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .cv-dot.green {
+            background: #27c93f;
+        }
+
+        .cv-title {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cv-iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-header,
+            .grid-large {
+                grid-column: span 1;
+            }
+
+            nav {
+                top: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+        }
+
+        /* ===== CONTACT FORM ===== */
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .contact-form .full {
+            grid-column: span 2;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            grid-column: span 2;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--violet));
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        #toast-web {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 170, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 20px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form .full {
+                grid-column: span 1;
+            }
+
+            .btn-submit {
+                grid-column: span 1;
+            }
+        }
+
+        #projects-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 1024px) {
+            #projects-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #projects-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cursor-ball"></div>
+    <div id="cursor-outline"></div>
+    <div id="dice-tooltip" class="dice-tooltip"></div>
+    <canvas id="global-stars-canvas"></canvas>
+
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="btn-close-modal" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="m-title">Projet Confidentiel</h2>
+            <div class="modal-body">
+                <p id="m-msg" style="margin-bottom: 20px; color: #fff; font-weight: 600;">Ce projet a été réalisé
+                    mais ne peut être présenté publiquement pour des raisons de confidentialité.</p>
+                <p id="m-desc"></p>
+            </div>
+            <button class="btn-dice" onclick="closeModal()" style="width:100%;">Compris</button>
+        </div>
+    </div>
+
+    <nav class="glass">
+        <img id="nav-photo" class="nav-photo" src="" alt="Ludel TOPANOU">
+        <ul class="nav-links">
+            <li><a href="#hero">Accueil</a></li>
+            <li><a href="#about">Biographie</a></li>
+            <li><a href="#experiences">Expériences</a></li>
+            <li><a href="#technologies">Mes Stacks</a></li>
+            <li><a href="#projets">Mes Projets</a></li>
+            <li><a href="#contact">Contacts</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div class="hero-inner">
+            <div class="hero-logo-wrap"><img id="p-logo" class="hero-logo" src="" alt="Logo"></div>
+            <p class="hero-subtitle" id="p-poste"></p>
+            <h1 class="hero-title" id="p-nom"></h1>
+            <div style="display: flex; gap: 16px; justify-content: center; margin-top: 32px;">
+                <a href="#projets" class="glass"
+                    style="padding: 14px 28px; color: #fff; text-decoration: none; font-weight: 600;">Projets</a>
+                <a href="#contact" class="glass"
+                    style="padding: 14px 28px; color: var(--accent); text-decoration: none; font-weight: 600; border-color: var(--accent);">Contact</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section id="about">
+            <div class="bento-grid">
+                <div class="grid-header">
+                    <h2 style="font-family: var(--font-title); font-size: 2.8rem;">Biographie</h2>
+                </div>
+                <div class="bento-item glass grid-large bento-main">
+                    <h2 style="font-family: var(--font-title); font-size: 2.5rem; margin-bottom: 20px;">À propos</h2>
+                    <p id="p-desc" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-dim);"></p>
+                </div>
+                <div class="bento-item glass"
+                    style="display:flex; flex-direction:column; justify-content:center; text-align:center;">
+                    <h3 style="color: var(--accent); margin-bottom: 10px;">Status</h3>
+                    <p id="p-dispo" style="font-weight: 700; font-size: 1.2rem;"></p>
+                </div>
+                <div id="stats-container" style="display: contents;"></div>
+            </div>
+        </section>
+
+        <section id="experiences">
+            <div class="grid-header">
+                <h2 style="font-family: var(--font-title); font-size: 2.8rem;">Expériences</h2>
+            </div>
+            <div id="exp-container" class="timeline"></div>
+        </section>
+
+        <section id="technologies" class="glass">
+            <div class="grid-header" id="tech-header">
+                <h2 style="font-family: var(--font-title); font-size: 2.8rem;">Dés de <span>Stack</span></h2>
+                <p style="color: var(--text-dim);">Cliquez pour explorer et pousser les dés dans l'espace.</p>
+            </div>
+            <div class="dice-instructions" id="tech-inst" style="display:none;">
+                <b>Drag</b> pour tourner • <b>Clic</b> pour donner de l'élan • <b>Scroll</b> pour zoomer
+            </div>
+            <canvas id="dice-canvas"></canvas>
+            <div class="dice-ui">
+                <button class="btn-dice" id="btn-reset-dice">Reset</button>
+                <button class="btn-dice" id="btn-close-tech" style="display: none; background: var(--violet);">×
+                    Quitter</button>
+            </div>
+        </section>
+
+        <section id="projets">
+            <div class="grid-header">
+                <h2 style="font-family: var(--font-title); font-size: 2.8rem;">Projets</h2>
+            </div>
+            <div id="projects-container"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 32px;"></div>
+        </section>
+
+        <section id="contact">
+            <div class="bento-item glass" style="max-width: 800px; margin: 0 auto; text-align: center; padding: 60px;">
+                <h2 style="font-family: var(--font-title); font-size: 2.5rem; margin-bottom: 24px;">Travaillons ensemble
+                </h2>
+                <p id="c-email"
+                    style="font-weight: 900; color: #fff; font-size: 1.8rem; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 20px;">
+                </p>
+
+                <div id="contact-form-wrapper" style="display: none;">
+                    <form id="contact-form" class="contact-form">
+                        <input type="text" id="f-nom" placeholder="Votre Nom" required>
+                        <input type="email" id="f-email" placeholder="Votre Email" required>
+                        <input type="text" id="f-objet" placeholder="Sujet" class="full">
+                        <textarea id="f-message" placeholder="Votre Message" class="full" required></textarea>
+                        <button type="submit" class="btn-submit">Envoyer le message</button>
+                    </form>
+                </div>
+
+                <div class="cv-preview-container">
+                    <div class="cv-header">
+                        <div class="cv-dots">
+                            <div class="cv-dot red"></div>
+                            <div class="cv-dot yellow"></div>
+                            <div class="cv-dot green"></div>
+                        </div>
+                        <span class="cv-title">Curriculum Vitae — Aperçu</span>
+                        <div style="width:52px;"></div>
+                    </div>
+                    <iframe id="cv-viewer" class="cv-iframe" src=""></iframe>
+                </div>
+                <a id="p-cv-link" href="#" target="_blank" class="btn-dice"
+                    style="display: inline-block; margin-top: 40px; padding: 14px 40px; background: var(--accent);">Télécharger
+                    CV</a>
+            </div>
+        </section>
+    </div>
+
+    <footer style="padding: 100px 0 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 100px;">
+        <p style="color: var(--text-dim); font-size: 0.9rem;">© 2026 <span id="p-nom-footer"></span>
+            <a href="/admin.html" style="color: inherit; text-decoration: none; cursor: default;">— Portfolio
+                interactif</a>.
+        </p>
+    </footer>
+
+    <script src="js/three.min.js"></script>
+
+    <script>
+        let data = {}, initialized = false, diceScene = null;
+        async function load() {
+            try {
+                const r = await fetch('/api/data');
+                data = await r.json();
+                render();
+            } catch (e) { console.error(e); }
+        }
+
+        function render() {
+            const p = data.profil; if (!p) return;
+            document.getElementById('p-nom').innerText = p.nom;
+            document.getElementById('p-nom-footer').innerText = p.nom;
+            document.getElementById('p-poste').innerText = p.poste;
+            document.getElementById('p-desc').innerText = p.description;
+            document.getElementById('p-logo').src = p.logo || p.photo;
+            document.getElementById('nav-photo').src = p.photo;
+            document.getElementById('p-cv-link').href = p.cv;
+            // PDF parameters to clean toolbar/scrollbar + Fit Horizontal
+            document.getElementById('cv-viewer').src = p.cv + "#toolbar=0&navpanes=0&scrollbar=0&view=FitH";
+            setTimeout(resizeCV, 500); // Initial resize
+
+            if (data.statistiques) {
+                document.getElementById('stats-container').innerHTML = data.statistiques.map(s => `
+                <div class="bento-item glass" style="text-align:center;">
+                    <div style="font-size:2.5rem; font-weight:900; color:var(--accent);">${s.valeur}${s.suffixe || ''}</div>
+                    <div style="font-size:0.8rem; color:var(--text-dim); text-transform:uppercase; margin-top:5px;">${s.libelle}</div>
+                </div>
+            `).join('');
+            }
+            document.getElementById('p-dispo').innerHTML = p.disponible
+                ? '<span style="color:#27c93f;">● Disponible</span>'
+                : '<span style="color:#ff5f56;">● Indisponible</span>';
+
+            const expContainer = document.getElementById('exp-container');
+            expContainer.innerHTML = data.experiences.map(e => `
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">${new Date(e.dateDebut).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })} — ${e.dateFin ? new Date(e.dateFin).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }) : 'Présent'}</span>
+                        <div class="timeline-company">${e.entreprise}</div>
+                        <div class="timeline-type">${e.type}</div>
+                        <p class="timeline-desc">${e.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const proContainer = document.getElementById('projects-container');
+            proContainer.innerHTML = data.projets.map((pr, idx) => `
+                <div class="project-card" onclick="handleProjectClick(${idx})" title="${pr.description || ''}">
+                    <div class="project-img-wrap">
+                        <img src="${pr.image}" class="project-img">
+                    </div>
+                    <div class="project-info">
+                        <span style="font-size:0.7rem;color:var(--accent);text-transform:uppercase;font-weight:800;letter-spacing:1px;">${pr.categorie}</span>
+                        <h4 style="font-size:1.4rem;margin:8px 0 12px;font-weight:900;">${pr.titre}</h4>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.8rem;color:var(--text-dim);">${pr.date}</span>
+                            <span style="color:var(--accent); font-weight:700;">${pr.lien === '#' ? 'Confidentiel' : 'Voir Live'}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const c = data.contact;
+            document.getElementById('c-email').innerText = c.email;
+            if (c.formulaireActif) {
+                document.getElementById('contact-form-wrapper').style.display = 'block';
+            }
+
+            if (!initialized && typeof THREE !== 'undefined') {
+                initialized = true; initGlobalStars(); initDice();
+            }
+        }
+
+        /* ===== CURSOR ===== */
+        const ball = document.getElementById('cursor-ball'), outline = document.getElementById('cursor-outline');
+        let mx = window.innerWidth / 2, my = window.innerHeight / 2, curX = mx, curY = my, curOutX = mx, curOutY = my;
+        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        function animateCursor() {
+            curX += (mx - curX) * 0.2; curY += (my - curY) * 0.2;
+            curOutX += (mx - curOutX) * 0.1; curOutY += (my - curOutY) * 0.1;
+            ball.style.transform = `translate(${curX}px, ${curY}px)`;
+            outline.style.transform = `translate(${curOutX - 20}px, ${curOutY - 20}px)`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        function initGlobalStars() {
+            const canvas = document.getElementById('global-stars-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 40;
+            const count = 4000;
+            const pos = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            const c1 = new THREE.Color(0x00AAFF), c2 = new THREE.Color(0x7B2FFF);
+            for (let i = 0; i < count * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 160; pos[i + 1] = (Math.random() - 0.5) * 160; pos[i + 2] = (Math.random() - 0.5) * 160;
+                const mixed = c1.clone().lerp(c2, Math.random());
+                colors[i] = mixed.r; colors[i + 1] = mixed.g; colors[i + 2] = mixed.b;
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.12, vertexColors: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            function anim() {
+                points.rotation.y += 0.0003; points.rotation.x += 0.0001;
+                camera.position.x += ((mx / window.innerWidth - 0.5) * 8 - camera.position.x) * 0.05;
+                camera.position.y += ((my / window.innerHeight - 0.5) * -8 - camera.position.y) * 0.05;
+                camera.lookAt(0, 0, 0);
+                renderer.render(scene, camera); requestAnimationFrame(anim);
+            }
+            anim();
+
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            });
+        }
+
+        /* ===== TECH STACK V2: SPACE DICE ROOM ===== */
+        function initDice() {
+            const wrap = document.getElementById('technologies');
+            const canvas = document.getElementById('dice-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(wrap.clientWidth, 600);
+            renderer.setClearColor(0x030308, 1);
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / 600, 0.1, 1000);
+            camera.position.set(20, 15, 30);
+            let cameraTarget = new THREE.Vector3(0, 5, 0);
+
+            // Space Lighting (Enhanced)
+            const p1 = new THREE.PointLight(0x00AAFF, 2.5, 100); p1.position.set(15, 20, 15); scene.add(p1);
+            const p2 = new THREE.PointLight(0x7B2FFF, 2.5, 100); p2.position.set(-15, 20, -15); scene.add(p2);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6); scene.add(ambient);
+            const hemi = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5); scene.add(hemi);
+
+            // Stars Background
+            const sCount = 1000;
+            const sGeo = new THREE.BufferGeometry();
+            const sPos = new Float32Array(sCount * 3);
+            for (let i = 0; i < sCount * 3; i++) sPos[i] = (Math.random() - 0.5) * 200;
+            sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+            scene.add(new THREE.Points(sGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 })));
+
+            // Floor (Transparent Grid)
+            const grid = new THREE.GridHelper(60, 20, 0x00AAFF, 0x222222);
+            grid.position.y = -0.01; scene.add(grid);
+
+            const dice = [];
+            const textureLoader = new THREE.TextureLoader();
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            const tooltip = document.getElementById('dice-tooltip');
+
+            data.technologies.forEach((t, i) => {
+                const tex = textureLoader.load(t.logo || '');
+                tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+                tex.colorSpace = THREE.SRGBColorSpace;
+
+                const materials = Array(6).fill(new THREE.MeshStandardMaterial({
+                    map: tex,
+                    metalness: 0.2,
+                    roughness: 0.2,
+                    emissive: 0xffffff,
+                    emissiveIntensity: 0.02,
+                    transparent: true
+                }));
+                const die = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.5, 2.5), materials);
+
+                // Placement sur une grille pour éviter les collisions initiales
+                const cols = 5;
+                const gx = (i % cols) * 6 - (cols * 3) + 3;
+                const gz = Math.floor(i / cols) * 6 - 5;
+
+                die.position.set(gx, 25 + i * 4, gz);
+                die.userData = {
+                    name: t.nom,
+                    vy: 0, vx: 0, vz: 0,
+                    targetX: gx, targetZ: gz,
+                    ang: new THREE.Vector3(Math.random() * 0.1, Math.random() * 0.1, Math.random() * 0.1)
+                };
+                scene.add(die);
+                dice.push(die);
+            });
+
+            let theta = 0, phi = 0.5, isDragging = false, lastMX = 0, lastMY = 0, zoom = 40;
+
+            function updateD() {
+                dice.forEach(d => {
+                    if (d.position.y > 1.25) {
+                        d.userData.vy -= 0.025; d.position.y += d.userData.vy;
+                        // Maintien sur son axe X/Z pour éviter les collisions en tombant
+                        d.position.x += (d.userData.targetX - d.position.x) * 0.05 + d.userData.vx;
+                        d.position.z += (d.userData.targetZ - d.position.z) * 0.05 + d.userData.vz;
+                        d.rotation.x += d.userData.ang.x; d.rotation.y += d.userData.ang.y;
+
+                        // Répulsion simple entre dés pour "ne jamais se cogner"
+                        dice.forEach(other => {
+                            if (d === other) return;
+                            const dist = d.position.distanceTo(other.position);
+                            if (dist < 4) {
+                                const dir = d.position.clone().sub(other.position).normalize();
+                                d.position.add(dir.multiplyScalar(0.1));
+                            }
+                        });
+                    } else {
+                        d.position.y = 1.25; d.userData.vy *= -0.4;
+                        d.userData.vx *= 0.95; d.userData.vz *= 0.95;
+                        if (Math.abs(d.userData.vy) < 0.05) {
+                            d.userData.vy = 0;
+                            // Alignement propre sur une face
+                            const tx = Math.round(d.rotation.x / (Math.PI / 2)) * (Math.PI / 2);
+                            const tz = Math.round(d.rotation.z / (Math.PI / 2)) * (Math.PI / 2);
+                            d.rotation.x += (tx - d.rotation.x) * 0.1;
+                            d.rotation.z += (tz - d.rotation.z) * 0.1;
+                            d.userData.ang.set(0, 0, 0);
+                        }
+                    }
+                });
+
+                // Manual Orbit Camera
+                if (!isDragging) theta += 0.0015;
+                camera.position.x = Math.sin(theta) * Math.cos(phi) * zoom;
+                camera.position.z = Math.cos(theta) * Math.cos(phi) * zoom;
+                camera.position.y = Math.sin(phi) * zoom + cameraTarget.y;
+                camera.lookAt(cameraTarget);
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(updateD);
+            }
+            updateD();
+
+            // ZOOM
+            wrap.addEventListener('wheel', (e) => {
+                if (!wrap.classList.contains('fullscreen')) return;
+                e.preventDefault();
+                zoom = Math.max(10, Math.min(80, zoom + e.deltaY * 0.05));
+            }, { passive: false });
+
+            // PUSH DICE ON CLICK (Fixed detection)
+            let startT = 0;
+            wrap.addEventListener('mousedown', (e) => {
+                startT = Date.now();
+                if (!wrap.classList.contains('fullscreen')) {
+                    wrap.classList.add('fullscreen');
+                    document.getElementById('btn-close-tech').style.display = 'block';
+                    document.getElementById('tech-header').style.display = 'none';
+                    document.getElementById('tech-inst').style.display = 'block';
+                    window.dispatchEvent(new Event('resize'));
+                }
+                isDragging = true; lastMX = e.clientX; lastMY = e.clientY;
+            });
+
+            window.addEventListener('mouseup', (e) => {
+                isDragging = false;
+                if (Date.now() - startT < 200 && wrap.classList.contains('fullscreen')) {
+                    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                    raycaster.setFromCamera(mouse, camera);
+                    const intersects = raycaster.intersectObjects(dice);
+                    if (intersects.length > 0) {
+                        const obj = intersects[0].object;
+                        obj.userData.vy = 0.6;
+                        obj.userData.vx = (Math.random() - 0.5) * 0.8;
+                        obj.userData.vz = (Math.random() - 0.5) * 0.8;
+                        obj.userData.ang.set(Math.random() * 0.3, Math.random() * 0.3, Math.random() * 0.3);
+                        cameraTarget.lerp(obj.position, 0.5);
+                    }
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    theta -= (e.clientX - lastMX) * 0.008;
+                    phi = Math.max(0.1, Math.min(Math.PI / 2.5, phi + (e.clientY - lastMY) * 0.008));
+                    lastMX = e.clientX; lastMY = e.clientY;
+                }
+                // Hover Tooltip
+                mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(dice);
+                if (intersects.length > 0) {
+                    tooltip.innerText = intersects[0].object.userData.name;
+                    tooltip.style.opacity = 1; tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY + 15) + 'px';
+                    ball.style.width = '24px'; ball.style.height = '24px'; ball.style.background = 'transparent'; ball.style.border = '2px solid white';
+                } else {
+                    tooltip.style.opacity = 0;
+                    ball.style.width = '8px'; ball.style.height = '8px'; ball.style.background = '#fff'; ball.style.border = 'none';
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                const w = wrap.clientWidth, h = wrap.classList.contains('fullscreen') ? window.innerHeight : 600;
+                renderer.setSize(w, h);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            });
+
+            document.getElementById('btn-close-tech').onclick = (e) => {
+                e.stopPropagation();
+                wrap.classList.remove('fullscreen');
+                document.getElementById('btn-close-tech').style.display = 'none';
+                document.getElementById('tech-header').style.display = 'block';
+                document.getElementById('tech-inst').style.display = 'none';
+                cameraTarget.set(0, 5, 0);
+                window.dispatchEvent(new Event('resize'));
+            };
+
+            document.getElementById('btn-reset-dice').onclick = (e) => {
+                e.stopPropagation();
+                dice.forEach((d, i) => {
+                    const cols = 5;
+                    const gx = (i % cols) * 6 - (cols * 3) + 3;
+                    const gz = Math.floor(i / cols) * 6 - 5;
+                    d.position.set(gx, 25 + i * 4, gz);
+                    d.userData.vy = 0; d.userData.vx = 0; d.userData.vz = 0;
+                    d.userData.targetX = gx; d.userData.targetZ = gz;
+                });
+                cameraTarget.set(0, 5, 0);
+            };
+        }
+
+        function handleProjectClick(idx) {
+            const pr = data.projets[idx];
+            if (pr.lien === '#') {
+                document.getElementById('m-title').innerText = pr.titre;
+                document.getElementById('m-desc').innerText = pr.description || "Aucune description supplémentaire disponible.";
+                document.getElementById('project-modal').style.display = 'flex';
+            } else {
+                window.open(pr.lien, '_blank');
+            }
+        }
+        function closeModal() { document.getElementById('project-modal').style.display = 'none'; }
+
+        function resizeCV() {
+            const container = document.querySelector('.cv-preview-container');
+            if (container) {
+                const w = container.clientWidth;
+                container.style.height = (w * 1.414) + 'px';
+            }
+        }
+
+        load();
+        window.onclick = (e) => {
+            if (e.target.id === 'project-modal') closeModal();
+        }
+        window.onscroll = () => { document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 100); }
+        window.onresize = () => {
+            resizeCV();
+            // Also trig standard resizes (Hero/Dice)
+            window.dispatchEvent(new Event('dice-resize'));
+        }
+
+        /* ===== CONTACT SUBMISSION ===== */
+        document.getElementById('contact-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Envoi en cours...';
+
+            const payload = {
+                nom: document.getElementById('f-nom').value,
+                email: document.getElementById('f-email').value,
+                objet: document.getElementById('f-objet').value,
+                message: document.getElementById('f-message').value
+            };
+
+            try {
+                const r = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!r.ok) {
+                    const errorText = await r.text();
+                    console.error('Erreur serveur:', errorText);
+                    showToast('Erreur serveur: ' + r.status);
+                    return;
+                }
+
+                const res = await r.json();
+                if (res.success) {
+                    showToast('Message envoyé ! Merci');
+                    e.target.reset();
+                } else {
+                    showToast('Erreur : ' + (res.message || 'Inconnue'));
+                }
+            } catch (err) {
+                console.error('Erreur submission:', err);
+                showToast('Erreur de connexion');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        };
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-web');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 4000);
+        }
+    </script>
+    <div id="toast-web"></div>
+</body>
+
+</html>

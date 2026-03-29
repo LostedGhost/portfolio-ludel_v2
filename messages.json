@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1774729719480,
+    "date": "2026-03-28T20:28:39.480Z",
+    "nom": "Ludel",
+    "email": "topanoulucio@gmail.com",
+    "objet": "Lolo",
+    "message": "Lala",
+    "lu": true
+  },
+  {
+    "id": 1774728459047,
+    "date": "2026-03-28T20:07:39.047Z",
+    "nom": "Ludel Test",
+    "email": "ludel@test.com",
+    "objet": "Test Final",
+    "message": "Verification du champ message_lu",
+    "lu": true
+  }
+]

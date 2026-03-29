@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administration — Portfolio Ludel</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+  <style>
+    /* CSS Reset and Self-Sufficiency */
+    :root {
+      --font-main: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-title: "Space Grotesk", "Segoe UI Bold", sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #07071a;
+      --sidebar: #0a0a22;
+      --accent: #00AAFF;
+      --violet: #7B2FFF;
+      --text: #E8E8F0;
+      --muted: rgba(232, 232, 240, .55);
+      --border: rgba(0, 170, 255, .15);
+      --card: rgba(255, 255, 255, .03);
+      --r: 10px
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: var(--font-title)
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    /* ===== LOGIN MODAL ===== */
+    #loginModal {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: min(420px, 90vw);
+      text-align: center
+    }
+
+    .login-logo {
+      font-size: 2.5rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px
+    }
+
+    .login-box h2 {
+      margin-bottom: 28px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      font-weight: 400
+    }
+
+    .login-box input {
+      width: 100%;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 14px;
+      outline: 0;
+      transition: .25s
+    }
+
+    .login-box input:focus {
+      border-color: var(--accent)
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 13px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--violet));
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 0;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .login-box button:hover {
+      opacity: .85
+    }
+
+    #loginError {
+      color: #ff5555;
+      font-size: .85rem;
+      margin-top: 10px;
+      min-height: 20px
+    }
+
+    #countdown {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-top: 8px
+    }
+
+    /* ===== ADMIN LAYOUT ===== */
+    #adminApp {
+      display: none;
+      height: 100%;
+      flex-direction: row
+    }
+
+    #adminApp.visible {
+      display: flex
+    }
+
+    aside {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: 100
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sidebar-logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    nav.sidebar-nav {
+      flex: 1;
+      padding: 16px 0;
+      overflow-y: auto
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      color: var(--muted);
+      font-size: .9rem;
+      cursor: pointer;
+      transition: .2s;
+      border-left: 3px solid transparent
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: var(--text);
+      background: rgba(0, 170, 255, .06);
+      border-left-color: var(--accent)
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .btn-sidebar {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: .85rem;
+      cursor: pointer;
+      transition: .2s;
+      text-align: center
+    }
+
+    .btn-sidebar:hover {
+      color: var(--text);
+      border-color: var(--accent)
+    }
+
+    .btn-sidebar.danger {
+      border-color: rgba(255, 85, 85, .3);
+      color: rgba(255, 85, 85, .7)
+    }
+
+    .btn-sidebar.danger:hover {
+      color: #ff5555;
+      border-color: #ff5555
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      max-height: 100vh
+    }
+
+    .page-section {
+      display: none
+    }
+
+    .page-section.active {
+      display: block
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    /* ===== FORM COMPONENTS ===== */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .form-group {
+      margin-bottom: 16px
+    }
+
+    .form-group label {
+      display: block;
+      font-size: .83rem;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      outline: 0;
+      transition: .25s
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent)
+    }
+
+    .form-group select option {
+      background: #1a1a3a
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px
+    }
+
+    .btn-save {
+      padding: 11px 24px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--violet));
+      color: #fff;
+      font-size: .9rem;
+      font-weight: 600;
+      border: 0;
+      cursor: pointer;
+      transition: .2s;
+      margin-top: 8px
+    }
+
+    .btn-save:hover {
+      opacity: .85
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: .8rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .btn-sm:hover {
+      color: var(--text);
+      border-color: var(--accent)
+    }
+
+    .btn-danger {
+      border-color: rgba(255, 85, 85, .3);
+      color: rgba(255, 85, 85, .7)
+    }
+
+    .btn-danger:hover {
+      color: #ff5555;
+      border-color: #ff5555;
+      background: rgba(255, 85, 85, .05)
+    }
+
+    /* ===== TOGGLE ===== */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px
+    }
+
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 24px
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0
+    }
+
+    .slider-tog {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 24px;
+      cursor: pointer;
+      transition: .3s
+    }
+
+    .slider-tog::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      left: 3px;
+      top: 3px;
+      transition: .3s
+    }
+
+    .toggle input:checked+.slider-tog {
+      background: var(--accent)
+    }
+
+    .toggle input:checked+.slider-tog::before {
+      transform: translateX(18px)
+    }
+
+    /* ===== LIST ITEMS ===== */
+    .list-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative
+    }
+
+    .list-item-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer
+    }
+
+    .list-item-body {
+      display: none;
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 1px solid var(--border)
+    }
+
+    .list-item.expanded .list-item-body {
+      display: block
+    }
+
+    .drag-handle {
+      color: var(--muted);
+      cursor: grab;
+      font-size: 1rem;
+      user-select: none
+    }
+
+    /* ===== SKILL LIST ===== */
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px
+    }
+
+    .skill-row input[type=text] {
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      font-size: .9rem;
+      flex: 1;
+      outline: 0
+    }
+
+    .skill-row input[type=range] {
+      flex: 1;
+      accent-color: var(--accent)
+    }
+
+    .skill-percent {
+      min-width: 36px;
+      font-size: .85rem;
+      color: var(--accent);
+      text-align: right
+    }
+
+    /* ===== TECH LIST ===== */
+    .tech-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px
+    }
+
+    .tech-logo-preview {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border)
+    }
+
+    /* ===== STATS GRID ===== */
+    .stats-admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .stat-edit-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px
+    }
+
+    /* ===== MESSAGES LIST ===== */
+    #messageList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px
+    }
+
+    .message-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      transition: .3s cubic-bezier(0.2, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between
+    }
+
+    .message-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 30px rgba(0, 170, 255, 0.1)
+    }
+
+    .message-card.unread {
+      border-top: 5px solid var(--accent);
+      background: linear-gradient(to bottom, rgba(0, 170, 255, 0.05), transparent)
+    }
+
+    .message-card .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      width: 100%
+    }
+
+    .message-card .msg-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden
+    }
+
+    .message-card .msg-avatar {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: var(--accent);
+      font-size: 1.1rem
+    }
+
+    .message-card .msg-info {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .message-card .msg-body {
+      flex-grow: 1;
+      font-size: .92rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: var(--text);
+      margin-top: 14px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      max-height: 150px;
+      overflow-y: auto
+    }
+
+    .badge-new {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle
+    }
+
+    .badge-read {
+      background: rgba(39, 201, 63, 0.15);
+      color: #27c93f;
+      border: 1px solid rgba(39, 201, 63, 0.3);
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle
+    }
+
+    .msg-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px;
+      border-radius: 12px;
+      width: fit-content
+    }
+
+    .btn-filter {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: .85rem;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .btn-filter.active {
+      background: var(--card);
+      color: var(--accent);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2)
+    }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1a3a1a;
+      border: 1px solid #00c850;
+      color: #00c850;
+      border-radius: 10px;
+      padding: 14px 22px;
+      font-size: .9rem;
+      opacity: 0;
+      transition: .3s;
+      z-index: 9000;
+      pointer-events: none
+    }
+
+    #toast.show {
+      opacity: 1
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal">
+    <div class="login-box">
+      <div class="login-logo">LT</div>
+      <h2>Administration du portfolio</h2>
+      <form id="loginForm">
+        <input type="password" id="pwInput" placeholder="Mot de passe" autocomplete="current-password" required
+          aria-label="Mot de passe administrateur">
+        <button type="submit">Se connecter</button>
+      </form>
+      <div id="loginError" aria-live="polite"></div>
+      <div id="countdown"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN APP -->
+  <div id="adminApp" role="main">
+    <aside aria-label="Navigation administration">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">LT Admin</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Portfolio Manager</div>
+      </div>
+      <nav class="sidebar-nav" aria-label="Sections d'administration">
+        <div class="nav-item active" data-tab="profil">👤 Profil</div>
+        <div class="nav-item" data-tab="competences">📊 Compétences</div>
+        <div class="nav-item" data-tab="technologies">🛠️ Technologies</div>
+        <div class="nav-item" data-tab="experiences">📅 Expériences</div>
+        <div class="nav-item" data-tab="stats">🔢 Statistiques</div>
+        <div class="nav-item" data-tab="projets">🖼️ Projets</div>
+        <div class="nav-item" data-tab="messages" id="nav-messages-item">📩 Messages</div>
+        <div class="nav-item" data-tab="contact">✉️ Contact</div>
+        <div class="nav-item" data-tab="securite">🔒 Sécurité</div>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" class="btn-sidebar">🌐 Voir le portfolio</a>
+        <button class="btn-sidebar danger" onclick="logout()">⬅ Déconnexion</button>
+      </div>
+    </aside>
+    <main>
+      <!-- PROFIL -->
+      <div class="page-section active" id="tab-profil">
+        <h2 class="page-title">Profil</h2>
+        <div class="form-row">
+          <div class="form-group"><label>Nom complet</label><input id="pNom" type="text"></div>
+          <div class="form-group"><label>Poste</label><input id="pPoste" type="text"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input id="pEmail" type="email"></div>
+          <div class="form-group"><label>Téléphone</label><input id="pTel" type="tel"></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="pDesc" rows="4"></textarea></div>
+        <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="pDispo"><span
+              class="slider-tog"></span></label><span>Disponible</span></div>
+        <div class="form-row">
+          <div class="form-group"><label>Logo principal</label><input type="file" id="logoUpload" accept="image/*">
+            <p style="font-size:.78rem;color:var(--muted);margin-top:4px" id="logoUrl"></p>
+          </div>
+          <div class="form-group"><label>Photo de profil</label><input type="file" id="photoUpload" accept="image/*">
+            <p style="font-size:.78rem;color:var(--muted);margin-top:4px" id="photoUrl"></p>
+          </div>
+          <div class="form-group"><label>CV (PDF)</label><input type="file" id="cvUpload" accept=".pdf">
+            <p style="font-size:.78rem;color:var(--muted);margin-top:4px" id="cvUrl"></p>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveProfil()">💾 Sauvegarder</button>
+      </div>
+
+      <!-- COMPÉTENCES -->
+      <div class="page-section" id="tab-competences">
+        <h2 class="page-title">Compétences</h2>
+        <div id="skillList"></div>
+        <button class="btn-sm" onclick="addSkill()" style="margin-top:8px">+ Ajouter</button><br>
+        <button class="btn-save" onclick="saveCompetences()" style="margin-top:16px">💾 Sauvegarder</button>
+      </div>
+
+      <!-- TECHNOLOGIES -->
+      <div class="page-section" id="tab-technologies">
+        <h2 class="page-title">Technologies</h2>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Les dés se régénèrent automatiquement depuis
+          cette liste.</p>
+        <div id="techList"></div>
+        <button class="btn-sm" onclick="addTech()" style="margin-top:8px">+ Ajouter une technologie</button><br>
+        <button class="btn-save" onclick="saveTechnologies()" style="margin-top:16px">💾 Sauvegarder</button>
+      </div>
+
+      <!-- EXPÉRIENCES -->
+      <div class="page-section" id="tab-experiences">
+        <h2 class="page-title">Expériences</h2>
+        <div id="expList"></div>
+        <button class="btn-sm" onclick="addExp()" style="margin-top:8px">+ Ajouter une expérience</button><br>
+        <button class="btn-save" onclick="saveExperiences()" style="margin-top:16px">💾 Sauvegarder</button>
+      </div>
+
+      <div class="page-section" id="tab-stats">
+        <h2 class="page-title">Statistiques</h2>
+        <div class="stats-admin-grid" id="statsAdminGrid"></div>
+        <button class="btn-sm" onclick="addStat()" style="margin-top:8px">+ Ajouter une statistique</button><br>
+        <button class="btn-save" onclick="saveStats()" style="margin-top:16px">💾 Sauvegarder</button>
+      </div>
+
+      <!-- PROJETS -->
+      <div class="page-section" id="tab-projets">
+        <h2 class="page-title">Projets</h2>
+        <div id="projetList"></div>
+        <button class="btn-sm" onclick="addProjet()" style="margin-top:8px">+ Ajouter un projet</button><br>
+        <button class="btn-save" onclick="saveProjets()" style="margin-top:16px">💾 Sauvegarder</button>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="page-section" id="tab-messages">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+          <h2 class="page-title" style="margin:0">Messages reçus</h2>
+          <button class="btn-sm" onclick="renderMessages()">Actualiser</button>
+        </div>
+
+        <div class="msg-filters">
+          <button class="btn-filter active" onclick="setMsgFilter('all', this)">Tous</button>
+          <button class="btn-filter" onclick="setMsgFilter('unread', this)">Non lus</button>
+          <button class="btn-filter" onclick="setMsgFilter('read', this)">Lus</button>
+        </div>
+
+        <div id="messageList"></div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="page-section" id="tab-contact">
+        <h2 class="page-title">Contact</h2>
+        <div class="form-group"><label>Adresse</label><input id="cAddr" type="text"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Téléphone</label><input id="cTel" type="tel"></div>
+          <div class="form-group"><label>Email</label><input id="cEmail" type="email"></div>
+        </div>
+        <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="cForm"><span
+              class="slider-tog"></span></label><span>Afficher le formulaire de contact</span></div>
+        <button class="btn-save" onclick="saveContact()">💾 Sauvegarder</button>
+      </div>
+
+      <!-- SÉCURITÉ -->
+      <div class="page-section" id="tab-securite">
+        <h2 class="page-title">Sécurité</h2>
+        <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="secOld"
+            autocomplete="current-password"></div>
+        <div class="form-group"><label>Nouveau mot de passe (min. 8 caractères)</label><input type="password"
+            id="secNew" autocomplete="new-password"></div>
+        <div class="form-group"><label>Confirmer le nouveau mot de passe</label><input type="password" id="secConf"
+            autocomplete="new-password"></div>
+        <div id="secMsg" style="font-size:.85rem;min-height:20px;margin-bottom:12px" aria-live="polite"></div>
+        <button class="btn-save" onclick="changePassword()">🔑 Changer le mot de passe</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" role="status" aria-live="polite">✅ Modifications sauvegardées</div>
+
+  <script>
+    /* ===== STATE ===== */
+    let data = null, adminToken = null, failCount = 0, blocked = false;
+    const API = '/api';
+
+    /* ===== SHA-256 via Web Crypto ===== */
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    /* ===== LOGIN ===== */
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      if (blocked) return;
+      const pw = document.getElementById('pwInput').value;
+      const r = await fetch(`${API}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
+      const res = await r.json();
+      if (res.success) {
+        adminToken = await sha256(pw);
+        sessionStorage.setItem('adminToken', adminToken);
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminApp').classList.add('visible');
+        await loadData(); renderAll();
+      } else {
+        failCount++;
+        document.getElementById('loginError').textContent = 'Mot de passe incorrect.';
+        document.getElementById('pwInput').value = '';
+        if (failCount >= 3) {
+          blocked = true; let s = 30; document.getElementById('loginForm').querySelector('button').disabled = true;
+          const itv = setInterval(() => {
+            document.getElementById('countdown').textContent = `Réessayer dans ${--s}s`;
+            if (s <= 0) { clearInterval(itv); blocked = false; failCount = 0; document.getElementById('loginForm').querySelector('button').disabled = false; document.getElementById('countdown').textContent = ''; }
+          }, 1000);
+        }
+      }
+    });
+
+    function logout() { sessionStorage.removeItem('adminToken'); location.reload(); }
+
+    /* ===== LOAD DATA ===== */
+    async function loadData() {
+      const r = await fetch(`${API}/data`); data = await r.json();
+    }
+
+    function getToken() { return sessionStorage.getItem('adminToken') || adminToken; }
+
+    async function postData() {
+      const r = await fetch(`${API}/data`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() }, body: JSON.stringify(data) });
+      return r.ok;
+    }
+
+    async function uploadFile(file, oldPath) {
+      const fd = new FormData(); fd.append('file', file);
+      if (oldPath) fd.append('oldPath', oldPath);
+      const r = await fetch(`${API}/upload`, { method: 'POST', headers: { 'X-Admin-Token': getToken() }, body: fd });
+      if (!r.ok) return null;
+      const j = await r.json(); return j.url;
+    }
+
+    async function deleteFile(path) {
+      if (!path || !path.startsWith('/uploads/')) return;
+      await fetch(`${API}/delete-file`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() }, body: JSON.stringify({ path }) });
+    }
+
+    function toast(msg = '✅ Modifications sauvegardées') {
+      const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    /* ===== SIDEBAR NAV ===== */
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.page-section').forEach(x => x.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('tab-' + el.dataset.tab).classList.add('active');
+      });
+    });
+
+    /* ===== RENDER ALL ===== */
+    function renderAll() {
+      renderProfil(); renderCompetences(); renderTechnologies();
+      renderExperiences(); renderStatsAdmin(); renderProjets();
+      renderContact(); renderMessages();
+    }
+
+    /* ===== PROFIL ===== */
+    function renderProfil() {
+      const p = data.profil;
+      document.getElementById('pNom').value = p.nom || '';
+      document.getElementById('pPoste').value = p.poste || '';
+      document.getElementById('pEmail').value = p.email || '';
+      document.getElementById('pTel').value = p.telephone || '';
+      document.getElementById('pDesc').value = p.description || '';
+      document.getElementById('pDispo').checked = !!p.disponible;
+      document.getElementById('logoUrl').textContent = p.logo || '';
+      document.getElementById('photoUrl').textContent = p.photo || '';
+      document.getElementById('cvUrl').textContent = p.cv || '';
+    }
+    async function saveProfil() {
+      const logoFile = document.getElementById('logoUpload').files[0];
+      const photoFile = document.getElementById('photoUpload').files[0];
+      const cvFile = document.getElementById('cvUpload').files[0];
+      if (logoFile) { const u = await uploadFile(logoFile, data.profil.logo); if (u) { data.profil.logo = u; document.getElementById('logoUrl').textContent = u; } }
+      if (photoFile) { const u = await uploadFile(photoFile, data.profil.photo); if (u) { data.profil.photo = u; document.getElementById('photoUrl').textContent = u; } }
+      if (cvFile) { const u = await uploadFile(cvFile, data.profil.cv); if (u) { data.profil.cv = u; document.getElementById('cvUrl').textContent = u; } }
+      data.profil.nom = document.getElementById('pNom').value;
+      data.profil.poste = document.getElementById('pPoste').value;
+      data.profil.email = document.getElementById('pEmail').value;
+      data.profil.telephone = document.getElementById('pTel').value;
+      data.profil.description = document.getElementById('pDesc').value;
+      data.profil.disponible = document.getElementById('pDispo').checked;
+      await postData(); toast();
+    }
+
+    /* ===== COMPÉTENCES ===== */
+    function renderCompetences() {
+      document.getElementById('skillList').innerHTML = data.competences.map((c, i) => `
+    <div class="skill-row" draggable="true" data-si="${i}">
+      <span class="drag-handle" aria-hidden="true">⠿</span>
+      <input type="text" value="${c.nom}" onchange="data.competences[${i}].nom=this.value" aria-label="Nom de la compétence">
+      <input type="range" min="0" max="100" value="${c.valeur}" oninput="data.competences[${i}].valeur=+this.value;this.nextElementSibling.textContent=this.value+'%'" aria-label="Valeur ${c.valeur}%">
+      <span class="skill-percent">${c.valeur}%</span>
+      <button class="btn-sm btn-danger" onclick="removeSkill(${i})" aria-label="Supprimer ${c.nom}">×</button>
+    </div>`).join('');
+    }
+    function addSkill() { data.competences.push({ nom: 'Nouvelle compétence', valeur: 50 }); renderCompetences(); }
+    function removeSkill(i) { data.competences.splice(i, 1); renderCompetences(); }
+    async function saveCompetences() { await postData(); toast(); }
+
+    /* ===== TECHNOLOGIES ===== */
+    function renderTechnologies() {
+      document.getElementById('techList').innerHTML = data.technologies.map((t, i) => `
+    <div class="tech-row" draggable="true" data-ti="${i}">
+      <span class="drag-handle" aria-hidden="true">⠿</span>
+      ${t.logo ? `<img class="tech-logo-preview" src="${t.logo}" alt="${t.nom}">` : `<div class="tech-logo-preview" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.7rem">Sans logo</div>`}
+      <input type="text" style="flex:1;background:transparent;border:0;color:var(--text);font-size:.9rem;outline:0" value="${t.nom}" onchange="data.technologies[${i}].nom=this.value" aria-label="Nom technologie">
+      <label class="btn-sm" style="cursor:pointer"><input type="file" accept="image/*" style="display:none" onchange="uploadTechLogo(${i},this)">📁 Logo</label>
+      <button class="btn-sm btn-danger" onclick="removeTech(${i})" aria-label="Supprimer ${t.nom}">×</button>
+    </div>`).join('');
+    }
+    async function uploadTechLogo(i, input) {
+      const f = input.files[0]; if (!f) return;
+      const u = await uploadFile(f, data.technologies[i].logo); if (!u) return;
+      data.technologies[i].logo = u; renderTechnologies();
+    }
+    function addTech() { data.technologies.push({ id: Date.now(), nom: 'Nouvelle techno', logo: '' }); renderTechnologies(); }
+    function removeTech(i) {
+      if (confirm('Supprimer cette technologie ?')) {
+        const old = data.technologies[i].logo;
+        if (old) deleteFile(old);
+        data.technologies.splice(i, 1); renderTechnologies();
+      }
+    }
+    async function saveTechnologies() { await postData(); toast(); }
+
+    /* ===== EXPÉRIENCES ===== */
+    function renderExperiences() {
+      document.getElementById('expList').innerHTML = data.experiences.map((e, i) => `
+    <div class="list-item" id="exp-item-${i}">
+      <div class="list-item-header" onclick="toggleExp(${i})">
+        <span class="drag-handle" aria-hidden="true">⠿</span>
+        <strong style="flex:1">${e.entreprise || '(sans titre)'}</strong>
+        <span style="font-size:.8rem;color:var(--muted)">${e.type}</span>
+        <button class="btn-sm btn-danger" onclick="event.stopPropagation();removeExp(${i})" aria-label="Supprimer">×</button>
+      </div>
+      <div class="list-item-body">
+        <div class="form-group"><label>Entreprise</label><input type="text" value="${e.entreprise}" onchange="data.experiences[${i}].entreprise=this.value"></div>
+        <div class="form-group"><label>Type</label><select onchange="data.experiences[${i}].type=this.value">
+          ${['Stage professionnel', 'Stage académique', 'Bénévolat', 'Freelance'].map(o => `<option${e.type === o ? ' selected' : ''}>${o}</option>`).join('')}
+        </select></div>
+        <div class="form-row">
+          <div class="form-group"><label>Date début</label><input type="date" value="${e.dateDebut || ''}" onchange="data.experiences[${i}].dateDebut=this.value"></div>
+          <div class="form-group"><label>Date fin</label><input type="date" value="${e.dateFin || ''}" onchange="data.experiences[${i}].dateFin=this.value||null" id="expFin${i}"><div class="toggle-wrap" style="margin-top:8px"><label class="toggle"><input type="checkbox" ${!e.dateFin ? 'checked' : ''} onchange="if(this.checked){data.experiences[${i}].dateFin=null;document.getElementById('expFin${i}').value='';}else{data.experiences[${i}].dateFin=document.getElementById('expFin${i}').value;}"><span class="slider-tog"></span></label><span style="font-size:.8rem">Encore en cours</span></div></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea onchange="data.experiences[${i}].description=this.value">${e.description}</textarea></div>
+      </div>
+    </div>`).join('');
+    }
+    function toggleExp(i) { document.getElementById('exp-item-' + i).classList.toggle('expanded'); }
+    function addExp() { data.experiences.unshift({ id: Date.now(), entreprise: 'Nouvelle entreprise', type: 'Stage professionnel', dateDebut: '', dateFin: '', description: '' }); renderExperiences(); }
+    function removeExp(i) { if (confirm('Supprimer cette expérience ?')) { data.experiences.splice(i, 1); renderExperiences(); } }
+    async function saveExperiences() { await postData(); toast(); }
+
+    function renderStatsAdmin() {
+      document.getElementById('statsAdminGrid').innerHTML = data.statistiques.map((s, i) => `
+    <div class="stat-edit-card">
+      <button class="btn-sm btn-danger" onclick="removeStat(${i})" style="position:absolute;top:10px;right:10px">×</button>
+      <div class="form-group"><label>Libellé</label><input type="text" value="${s.libelle}" onchange="data.statistiques[${i}].libelle=this.value"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Valeur</label><input type="number" value="${s.valeur}" onchange="data.statistiques[${i}].valeur=+this.value"></div>
+        <div class="form-group"><label>Suffixe (ex: %)</label><input type="text" value="${s.suffixe || ''}" onchange="data.statistiques[${i}].suffixe=this.value" maxlength="5"></div>
+      </div>
+    </div>`).join('');
+    }
+    function addStat() { data.statistiques.push({ libelle: 'Nouveau', valeur: 0, suffixe: '' }); renderStatsAdmin(); }
+    function removeStat(i) { if (confirm('Supprimer cette statistique ?')) { data.statistiques.splice(i, 1); renderStatsAdmin(); } }
+    async function saveStats() { await postData(); toast(); }
+
+    /* ===== PROJETS ===== */
+    function renderProjets() {
+      document.getElementById('projetList').innerHTML = data.projets.map((p, i) => `
+    <div class="list-item" id="proj-${i}">
+      <div class="list-item-header" onclick="toggleProj(${i})">
+        <span class="drag-handle" aria-hidden="true">⠿</span>
+        ${p.image ? `<img class="projet-thumb" src="${p.image}" alt="${p.titre}">` : ''}
+        <strong style="flex:1">${p.titre}</strong>
+        <span style="font-size:.8rem;color:var(--muted)">${p.date}</span>
+        <button class="btn-sm btn-danger" onclick="event.stopPropagation();removeProjet(${i})" aria-label="Supprimer">×</button>
+      </div>
+      <div class="list-item-body">
+        <div class="form-row">
+          <div class="form-group"><label>Titre</label><input type="text" value="${p.titre}" onchange="data.projets[${i}].titre=this.value"></div>
+          <div class="form-group"><label>Catégorie</label><input type="text" value="${p.categorie}" onchange="data.projets[${i}].categorie=this.value"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Date</label><input type="date" value="${p.date}" onchange="data.projets[${i}].date=this.value"></div>
+          <div class="form-group"><label>Lien externe</label><input type="text" value="${p.lien || ''}" onchange="data.projets[${i}].lien=this.value" placeholder="# pour confidentiel"></div>
+        </div>
+        <div class="form-group"><label>Description courte (affichée au survol/modal)</label><textarea onchange="data.projets[${i}].description=this.value" placeholder="Description du projet...">${p.description || ''}</textarea></div>
+        <div class="form-group"><label>Image</label><label class="btn-sm" style="cursor:pointer"><input type="file" accept="image/*" style="display:none" onchange="uploadProjetImg(${i},this)">📁 Choisir une image</label>
+        ${p.image ? `<span style="font-size:.78rem;color:var(--muted);margin-left:8px">${p.image}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+    }
+    function toggleProj(i) { document.getElementById('proj-' + i).classList.toggle('expanded'); }
+    async function uploadProjetImg(i, input) {
+      const f = input.files[0]; if (!f) return;
+      const u = await uploadFile(f, data.projets[i].image); if (!u) return;
+      data.projets[i].image = u; renderProjets();
+    }
+    function addProjet() { data.projets.unshift({ id: Date.now(), titre: 'Nouveau projet', categorie: 'Développement web', date: new Date().toISOString().split('T')[0], description: '', image: '', lien: '#' }); renderProjets(); }
+    function removeProjet(i) {
+      if (confirm('Supprimer ce projet ?')) {
+        const old = data.projets[i].image;
+        if (old) deleteFile(old);
+        data.projets.splice(i, 1); renderProjets();
+      }
+    }
+    async function saveProjets() { await postData(); toast(); }
+
+    /* ===== CONTACT ===== */
+    function renderContact() {
+      const c = data.contact;
+      document.getElementById('cAddr').value = c.adresse || '';
+      document.getElementById('cTel').value = c.telephone || '';
+      document.getElementById('cEmail').value = c.email || '';
+      document.getElementById('cForm').checked = !!c.formulaireActif;
+    }
+    async function saveContact() {
+      data.contact.adresse = document.getElementById('cAddr').value;
+      data.contact.telephone = document.getElementById('cTel').value;
+      data.contact.email = document.getElementById('cEmail').value;
+      data.contact.formulaireActif = document.getElementById('cForm').checked;
+      await postData(); toast();
+    }
+
+    /* ===== SÉCURITÉ ===== */
+    async function changePassword() {
+      const oldPw = document.getElementById('secOld').value;
+      const newPw = document.getElementById('secNew').value;
+      const conf = document.getElementById('secConf').value;
+      const msg = document.getElementById('secMsg');
+      if (newPw.length < 8) { msg.style.color = '#ff5555'; msg.textContent = 'Le nouveau mot de passe doit contenir au moins 8 caractères.'; return; }
+      if (newPw !== conf) { msg.style.color = '#ff5555'; msg.textContent = 'Les mots de passe ne correspondent pas.'; return; }
+      const r = await fetch(`${API}/change-password`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() }, body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw }) });
+      const res = await r.json();
+      if (res.success) {
+        msg.style.color = '#00c850'; msg.textContent = 'Mot de passe modifié. Déconnexion dans 3s…';
+        setTimeout(logout, 3000);
+      } else {
+        msg.style.color = '#ff5555'; msg.textContent = res.message || 'Erreur';
+      }
+    }
+
+    /* ===== MESSAGES ===== */
+    let currentMsgFilter = 'all';
+
+    function setMsgFilter(filter, btn) {
+      currentMsgFilter = filter;
+      document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMessages();
+    }
+
+    async function renderMessages() {
+      const r = await fetch(`${API}/messages`, { headers: { 'X-Admin-Token': getToken() } });
+      if (!r.ok) return;
+      const allMsgs = await r.json();
+      const unreadCount = allMsgs.filter(m => !m.lu).length;
+
+      // Badge unread in sidebar
+      const navItem = document.getElementById('nav-messages-item');
+      if (unreadCount > 0) {
+        navItem.innerHTML = `📩 Messages <span class="badge-new">${unreadCount}</span>`;
+      } else {
+        navItem.innerHTML = `📩 Messages`;
+      }
+
+      // Apply Filter
+      let msgs = allMsgs;
+      if (currentMsgFilter === 'unread') msgs = allMsgs.filter(m => !m.lu);
+      else if (currentMsgFilter === 'read') msgs = allMsgs.filter(m => m.lu);
+
+      document.getElementById('messageList').innerHTML = msgs.length ? msgs.map((m, i) => `
+    <div class="message-card ${m.lu ? '' : 'unread'}">
+      <div class="msg-header">
+        <div class="msg-author">
+          <div class="msg-avatar">${m.nom.charAt(0).toUpperCase()}</div>
+          <div>
+            <strong style="font-size:1.1rem;display:flex;align-items:center;color:#fff">
+              ${m.nom} 
+              ${m.lu ? '<span class="badge-read">Lu</span>' : '<span class="badge-new">Nouveau</span>'}
+            </strong>
+            <span class="msg-info">${m.email}</span>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="msg-info">${new Date(m.date).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+          ${!m.lu ? `<button class="btn-sm" style="margin-top:10px;color:var(--accent);border-color:var(--accent);background:rgba(0,170,255,0.05)" onclick="markRead('${m.id}')">Marquer comme lu</button>` : ''}
+        </div>
+      </div>
+      <div style="font-weight:700;margin-top:10px;color:var(--accent);font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px">Objet : ${m.objet}</div>
+      <div class="msg-body">${m.message}</div>
+    </div>`).join('') : `<p style="color:var(--muted);text-align:center;padding:60px;background:rgba(255,255,255,0.02);border-radius:16px;border:1px dashed var(--border)">Aucun message ${currentMsgFilter === 'unread' ? 'non lu' : (currentMsgFilter === 'read' ? 'lu' : '')}.</p>`;
+    }
+
+    async function markRead(id) {
+      const r = await fetch(`${API}/mark-read`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': getToken() },
+        body: JSON.stringify({ id, lu: true })
+      });
+      if (r.ok) renderMessages();
+    }
+
+    /* ===== BOOT — Check session ===== */
+    (async () => {
+      const token = sessionStorage.getItem('adminToken');
+      if (token) {
+        // Validate stored token
+        const r = await fetch(`${API}/data`, { headers: { 'X-Admin-Token': token } });
+        if (r.ok) {
+          adminToken = token;
+          document.getElementById('loginModal').style.display = 'none';
+          document.getElementById('adminApp').classList.add('visible');
+          await loadData(); renderAll();
+        }
+      }
+    })();
+  </script>
+</body>
+
+</html>
