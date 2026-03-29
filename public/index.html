@@ -163,6 +163,34 @@
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
+        /* Burger Menu Icon */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            position: absolute;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 9px; }
+        .hamburger span:nth-child(3) { top: 18px; }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg); top: 9px; }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg); top: 9px; }
+
         #hero {
             height: 100vh;
             display: flex;
@@ -621,19 +649,59 @@
         }
 
         @media (max-width: 768px) {
-            .bento-grid {
-                grid-template-columns: 1fr;
-            }
+            .container { padding: 0 20px; }
+            section { padding: 80px 0; }
 
-            .grid-header,
-            .grid-large {
-                grid-column: span 1;
-            }
-
+            .hero-title { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+            
             nav {
+                top: 15px;
+                left: 15px;
+                transform: none;
+                width: calc(100% - 30px);
+                padding: 12px 20px;
+            }
+
+            .hamburger { display: block; }
+
+            .nav-links {
+                position: fixed;
                 top: 0;
-                width: 100%;
-                border-radius: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(3, 3, 8, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                border-left: 1px solid var(--border);
+                z-index: 1050;
+            }
+
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.5rem; }
+
+            .bento-grid { grid-template-columns: 1fr; }
+            .grid-header, .grid-large { grid-column: span 1; }
+            
+            #technologies { height: 450px; }
+            .dice-ui { bottom: 20px; right: 20px; scale: 0.8; }
+            .dice-instructions { top: 20px; left: 20px; font-size: 0.7rem; max-width: 150px; }
+            
+            .modal-content { padding: 30px 20px; width: 95%; }
+            .modal-title { font-size: 1.5rem; }
+
+            /* Contact Email Adjustment */
+            #c-email {
+                font-size: clamp(1rem, 5vw, 1.5rem) !important;
+                word-break: break-all;
+                margin-bottom: 15px !important;
+            }
+            #contact .bento-item {
+                padding: 40px 20px !important;
             }
         }
 
@@ -775,13 +843,18 @@
 
     <nav class="glass">
         <img id="nav-photo" class="nav-photo" src="" alt="Ludel TOPANOU">
-        <ul class="nav-links">
-            <li><a href="#hero">Accueil</a></li>
-            <li><a href="#about">Biographie</a></li>
-            <li><a href="#experiences">Expériences</a></li>
-            <li><a href="#technologies">Mes Stacks</a></li>
-            <li><a href="#projets">Mes Projets</a></li>
-            <li><a href="#contact">Contacts</a></li>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#hero" onclick="toggleMenu()">Accueil</a></li>
+            <li><a href="#about" onclick="toggleMenu()">Biographie</a></li>
+            <li><a href="#experiences" onclick="toggleMenu()">Expériences</a></li>
+            <li><a href="#technologies" onclick="toggleMenu()">Mes Stacks</a></li>
+            <li><a href="#projets" onclick="toggleMenu()">Mes Projets</a></li>
+            <li><a href="#contact" onclick="toggleMenu()">Contacts</a></li>
         </ul>
     </nav>
 
@@ -853,8 +926,8 @@
             <div class="bento-item glass" style="max-width: 800px; margin: 0 auto; text-align: center; padding: 60px;">
                 <h2 style="font-family: var(--font-title); font-size: 2.5rem; margin-bottom: 24px;">Travaillons ensemble
                 </h2>
-                <p id="c-email"
-                    style="font-weight: 900; color: #fff; font-size: 1.8rem; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 20px;">
+                <p id="c-email" class="email-display"
+                    style="font-weight: 800; color: #fff; font-size: 1.8rem; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 20px;">
                 </p>
 
                 <div id="contact-form-wrapper" style="display: none;">
@@ -1240,7 +1313,10 @@
                 window.open(pr.lien, '_blank');
             }
         }
-        function closeModal() { document.getElementById('project-modal').style.display = 'none'; }
+
+        function closeModal() {
+            document.getElementById('project-modal').style.display = 'none';
+        }
 
         function resizeCV() {
             const container = document.querySelector('.cv-preview-container');
@@ -1251,15 +1327,41 @@
         }
 
         load();
+
+        /* MOBILE MENU TOGGLE */
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        function toggleMenu() {
+            if (window.innerWidth <= 768) {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                if (navLinks.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+
+        if (hamburger) {
+            hamburger.addEventListener('click', toggleMenu);
+        }
+
         window.onclick = (e) => {
             if (e.target.id === 'project-modal') closeModal();
         }
-        window.onscroll = () => { document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 100); }
-        window.onresize = () => {
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        window.addEventListener('resize', () => {
             resizeCV();
-            // Also trig standard resizes (Hero/Dice)
             window.dispatchEvent(new Event('dice-resize'));
-        }
+        });
 
         /* ===== CONTACT SUBMISSION ===== */
         document.getElementById('contact-form').onsubmit = async (e) => {
@@ -1284,8 +1386,6 @@
                 });
 
                 if (!r.ok) {
-                    const errorText = await r.text();
-                    console.error('Erreur serveur:', errorText);
                     showToast('Erreur serveur: ' + r.status);
                     return;
                 }
@@ -1308,9 +1408,11 @@
 
         function showToast(msg) {
             const t = document.getElementById('toast-web');
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 4000);
+            if (t) {
+                t.innerText = msg;
+                t.style.display = 'block';
+                setTimeout(() => { t.style.display = 'none'; }, 4000);
+            }
         }
     </script>
     <div id="toast-web"></div>
