@@ -141,6 +141,11 @@ async function checkAdminToken(req, res) {
   return true;
 }
 
+// ── Fonction de hachage SHA-256 ──────────────────────────────────────────────
+function sha256(str) {
+  return crypto.createHash('sha256').update(str).digest('hex');
+}
+
 // ── Lire le body JSON ───────────────────────────────────────────────────────
 function readBody(req) {
   return new Promise((resolve, reject) => {
